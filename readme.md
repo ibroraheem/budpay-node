@@ -3,6 +3,7 @@
 The `BudPaySDK` class provides a set of methods for interacting with the BudPay API.
 
 ## Table of Contents
+
 - [BudPaySDK](#budpaysdk)
   - [Table of Contents](#table-of-contents)
   - [Constructor](#constructor)
@@ -31,7 +32,6 @@ The `BudPaySDK` class provides a set of methods for interacting with the BudPay 
     - [`initiateTvSubscription()`](#initiatetvsubscription)
     - [`initiateElectricityBillPayment()`](#initiateelectricitybillpayment)
     - [`verifyBVN(bvn, firstName, middleName, lastName, phoneNumber, dob, gender, reference, callbackUrl)`](#verifybvnbvn-firstname-middlename-lastname-phonenumber-dob-gender-reference-callbackurl)
-  - [Example Usage](#example-usage)
 
 ## Constructor
 
@@ -48,8 +48,11 @@ Creates a new instance of the `BudPaySDK` class.
 
 Initializes a transaction.
 
+Encrypts card
+You are required to parse your card encryption output as card parameter in your Transaction Initialize payload.
+You are expected to perform HMAC-SHA-512 encryption on your Transaction Initialize payload using your secret_key and parse it as Encryption in your Header. The parameters of this payload to encrypt must be in Alphabetical order.
 - `amount` (number): The transaction amount.
-- `card` (object): The card details.
+- `card` (string): encrypted data
 - `currency` (string): The currency of the transaction.
 - `email` (string): The email address of the user.
 - `reference` (string): The reference for the transaction.
@@ -198,22 +201,3 @@ Verifies a BVN (Bank Verification Number).
 - `gender` (string): The gender of the BVN owner.
 - `reference` (string): The reference for the BVN verification.
 - `callbackUrl` (string): The URL to receive the callback after the BVN verification.
-
-## Example Usage
-
-```javascript
-const BudPaySDK = require('BudPaySDK');
-
-const secretKey = 'YOUR_SECRET_KEY';
-const publicKey = 'YOUR_PUBLIC_KEY';
-
-const sdk = new BudPaySDK(secretKey, publicKey);
-
-(async () => {
-    try {
-        const transaction = await sdk.initializeTransaction(100, '4242424242424242', 'USD', 'user@example.com', 'txn_123456');
-        console.log(transaction);
-    } catch (error) {
-        console.error(error);
-    }
-})();

@@ -8,8 +8,6 @@ class BudPaySDK {
     }
 
 
-
-
     async initializeTransaction(amount, card, currency, email, reference) {
 
         const transactionPayload = {
@@ -422,3 +420,4 @@ class BudPaySDK {
 }
 
 module.exports = BudPaySDK
+
