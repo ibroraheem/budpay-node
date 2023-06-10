@@ -1,203 +1,237 @@
-# BudPaySDK
 
-The `BudPaySDK` class provides a set of methods for interacting with the BudPay API.
 
-## Table of Contents
+# BudPay SDK Documentation
 
-- [BudPaySDK](#budpaysdk)
-  - [Table of Contents](#table-of-contents)
-  - [Constructor](#constructor)
-    - [`BudPaySDK(secretKey, publicKey)`](#budpaysdksecretkey-publickey)
-  - [Methods](#methods)
-    - [`initializeTransaction(amount, card, currency, email, reference)`](#initializetransactionamount-card-currency-email-reference)
-    - [`initializeBankTransfer(email, amount, currency, reference, name)`](#initializebanktransferemail-amount-currency-reference-name)
-    - [`verifyTransaction(reference)`](#verifytransactionreference)
-    - [`requestPayment(recipient, amount, currency, description)`](#requestpaymentrecipient-amount-currency-description)
-    - [`createPaymentLink(amount, currency, name, description, redirect)`](#createpaymentlinkamount-currency-name-description-redirect)
-    - [`createCustomer(email, firstName, lastName, phone)`](#createcustomeremail-firstname-lastname-phone)
-    - [`createDedicatedVirtualAccount(customerId)`](#creatededicatedvirtualaccountcustomerid)
-    - [`getSettlements()`](#getsettlements)
-    - [`initiateRefund(reference)`](#initiaterefundreference)
-    - [`getTransaction(transactionId)`](#gettransactiontransactionid)
-    - [`getBankList()`](#getbanklist)
-    - [`initiateBankTransfer(bankCode, accountNumber, currency)`](#initiatebanktransferbankcode-accountnumber-currency)
-    - [`initiateEncryptedBankTransfer(encryptedPayload)`](#initiateencryptedbanktransferencryptedpayload)
-    - [`initiateBulkBankTransfer(transfers)`](#initiatebulkbanktransfertransfers)
-    - [`getPayout(payoutReference)`](#getpayoutpayoutreference)
-    - [`getPayoutFee(currency, amount)`](#getpayoutfeecurrency-amount)
-    - [`getWalletBalance(currency)`](#getwalletbalancecurrency)
-    - [`getWalletTransactions(currency)`](#getwallettransactionscurrency)
-    - [`initiateAirtimePurchase()`](#initiateairtimepurchase)
-    - [`initiateInternetSubscription()`](#initiateinternetsubscription)
-    - [`initiateTvSubscription()`](#initiatetvsubscription)
-    - [`initiateElectricityBillPayment()`](#initiateelectricitybillpayment)
-    - [`verifyBVN(bvn, firstName, middleName, lastName, phoneNumber, dob, gender, reference, callbackUrl)`](#verifybvnbvn-firstname-middlename-lastname-phonenumber-dob-gender-reference-callbackurl)
+## Installation
 
-## Constructor
+To install the BudPay SDK, run the following command:
 
-### `BudPaySDK(secretKey, publicKey)`
+```bash
+npm install @budpay/sdk
+```
 
-Creates a new instance of the `BudPaySDK` class.
+## Usage
 
-- `secretKey` (string): The secret key used for authorization.
-- `publicKey` (string): The public key used for authorization.
+First, require the BudPay SDK and create an instance of the SDK by providing your secret key and public key:
 
-## Methods
+```javascript
+const BudPaySDK = require('path/to/budpay-sdk');
 
-### `initializeTransaction(amount, card, currency, email, reference)`
+const sdk = new BudPaySDK('YOUR_SECRET_KEY', 'YOUR_PUBLIC_KEY');
+```
 
-Initializes a transaction.
+Make sure to replace `'YOUR_SECRET_KEY'` and `'YOUR_PUBLIC_KEY'` with your actual API credentials.
 
-Encrypts card
-You are required to parse your card encryption output as card parameter in your Transaction Initialize payload.
-You are expected to perform HMAC-SHA-512 encryption on your Transaction Initialize payload using your secret_key and parse it as Encryption in your Header. The parameters of this payload to encrypt must be in Alphabetical order.
-- `amount` (number): The transaction amount.
-- `card` (string): encrypted data
-- `currency` (string): The currency of the transaction.
-- `email` (string): The email address of the user.
-- `reference` (string): The reference for the transaction.
+### Initialization
 
-### `initializeBankTransfer(email, amount, currency, reference, name)`
+The BudPay SDK initializes with your API credentials:
 
-Initializes a bank transfer.
+```javascript
+const BudPaySDK = require('path/to/budpay-sdk');
 
-- `email` (string): The email address of the user.
-- `amount` (number): The transfer amount.
-- `currency` (string): The currency of the transfer.
-- `reference` (string): The reference for the transfer.
-- `name` (string): The name of the user.
+const sdk = new BudPaySDK('YOUR_SECRET_KEY', 'YOUR_PUBLIC_KEY');
+```
 
-### `verifyTransaction(reference)`
+### Card Encryption
 
-Verifies a transaction.
+Before initializing a payment, you can perform AES-256-CBC encryption on your card payload using your public key and reference. The SDK provides a `performCardEncryption` method for this purpose:
 
-- `reference` (string): The reference of the transaction to verify.
+```javascript
+const cardPayload = {
+  number: '4111111111111111',
+  cvv: '123',
+  exp_month: '12',
+  exp_year: '2023',
+  name: 'John Doe',
+};
 
-### `requestPayment(recipient, amount, currency, description)`
+const encryptedCard = sdk.performCardEncryption(cardPayload);
+console.log('Encrypted Card:', encryptedCard);
+```
 
-Requests a payment.
+The `performCardEncryption` method takes a card payload object as input and returns the encrypted card payload as a string.
 
-- `recipient` (string): The recipient of the payment.
-- `amount` (number): The payment amount.
-- `currency` (string): The currency of the payment.
-- `description` (string): The description of the payment.
+### Initialize Transaction
 
-### `createPaymentLink(amount, currency, name, description, redirect)`
+To initialize a transaction, you can use the `initializeTransaction` method:
 
-Creates a payment link.
+```javascript
+const amount = '100';
+const card = 'ENCRYPTED_CARD_PAYLOAD';
+const currency = 'NGN';
+const email = 'test@test.com';
+const reference = '1253627873656276350';
 
-- `amount` (number): The payment amount.
-- `currency` (string): The currency of the payment.
-- `name` (string): The name associated with the payment.
-- `description` (string): The description of the payment.
-- `redirect` (string): The URL to redirect to after the payment.
+sdk.initializeTransaction(amount, card, currency, email, reference)
+  .then((response) => {
+    console.log('Transaction Initialization Response:', response);
+  })
+  .catch((error) => {
+    console.error('Transaction Initialization Error:', error);
+  });
+```
 
-### `createCustomer(email, firstName, lastName, phone)`
+Replace `'ENCRYPTED_CARD_PAYLOAD'` with the actual encrypted card payload generated using the `performCardEncryption` method.
 
-Creates a customer.
+### Other Methods
 
-- `email` (string): The email address of the customer.
-- `firstName` (string): The first name of the customer.
-- `lastName` (string): The last name of the customer.
-- `phone` (string): The phone number of the customer.
+The BudPay SDK provides several other methods to perform various operations. Here are some examples:
 
-### `createDedicatedVirtualAccount(customerId)`
+#### Verify Transaction
 
-Creates a dedicated virtual account.
+To verify a transaction by its reference, use the `verifyTransaction` method:
 
-- `customerId` (string): The ID of the customer associated with the account.
+```javascript
+const reference = 'TRANSACTION_REFERENCE';
 
-### `getSettlements()`
+sdk.verifyTransaction(reference)
+  .then((response) => {
+    console.log('Transaction Verification Response:', response);
+  })
+  .catch((error) => {
+    console.error('Transaction Verification Error:', error);
+  });
+```
 
-Gets the settlements.
+Replace `'TRANSACTION_REFERENCE'` with the reference of the transaction you want to verify.
 
-### `initiateRefund(reference)`
+#### Get Transaction
 
-Initiates a refund.
+To retrieve information about a specific transaction, use the `getTransaction` method:
 
-- `reference` (string): The reference of the transaction to refund.
+```javascript
+const transactionId = 'TRANSACTION_ID';
 
-### `getTransaction(transactionId)`
+sdk.getTransaction(transactionId)
+  .then((response) => {
+    console.log('Transaction Information:', response);
+  })
+  .catch((error) => {
+    console.error('Transaction Information Error:', error);
+  });
+```
+
+Replace `'TRANSACTION_ID'` with the ID of the transaction you want to retrieve information about.
+
+#### Request Payment
 
-Gets a transaction by ID.
+To send a payment request to one or more recipients, use the `requestPayment` method:
 
-- `transactionId` (string): The ID of the transaction.
+```javascript
+const recipient = 'recipient@example.com';
+const amount = '100';
+const currency = 'NGN';
+const description = 'Payment Request';
 
-### `getBankList()`
+sdk.requestPayment(recipient, amount, currency, description)
+  .then((response) => {
+    console.log
+
+('Payment Request Response:', response);
+  })
+  .catch((error) => {
+    console.error('Payment Request Error:', error);
+  });
+```
 
-Gets the list of banks.
+Replace `'recipient@example.com'` with the email address of the recipient and adjust other parameters as needed.
 
-### `initiateBankTransfer(bankCode, accountNumber, currency)`
+#### Create Payment Link
 
-Initiates a bank transfer.
+To create a payment link for collecting payments, use the `createPaymentLink` method:
 
-- `bankCode` (string): The bank code.
-- `accountNumber` (string): The account number.
-- `currency` (string): The currency of the transfer.
+```javascript
+const amount = '100';
+const currency = 'NGN';
+const name = 'Product Name';
+const description = 'Payment for Product';
+const redirect = 'https://your-redirect-link';
 
-### `initiateEncryptedBankTransfer(encryptedPayload)`
+sdk.createPaymentLink(amount, currency, name, description, redirect)
+  .then((response) => {
+    console.log('Payment Link Creation Response:', response);
+  })
+  .catch((error) => {
+    console.error('Payment Link Creation Error:', error);
+  });
+```
 
-Initiates an encrypted bank transfer.
+Replace `'https://your-redirect-link'` with the actual redirect link for the payment.
 
-- `encryptedPayload` (object): The encrypted payload for the transfer.
+#### Create Customer
 
-### `initiateBulkBankTransfer(transfers)`
+To create a new customer with the provided details, use the `createCustomer` method:
 
-Initiates a bulk bank transfer.
+```javascript
+const email = 'customer@example.com';
+const firstName = 'John';
+const lastName = 'Doe';
+const phone = '1234567890';
 
-- `transfers` (array): An array of transfer objects.
+sdk.createCustomer(email, firstName, lastName, phone)
+  .then((response) => {
+    console.log('Customer Creation Response:', response);
+  })
+  .catch((error) => {
+    console.error('Customer Creation Error:', error);
+  });
+```
 
-### `getPayout(payoutReference)`
+Replace the customer details accordingly.
 
-Gets a payout by reference.
+#### Create Dedicated Virtual Account
 
-- `payoutReference` (string): The reference of the payout.
+To create a dedicated virtual account for a customer, use the `createDedicatedVirtualAccount` method:
 
-### `getPayoutFee(currency, amount)`
+```javascript
+const customerId = 'CUSTOMER_ID';
 
-Gets the fee for a payout.
+sdk.createDedicatedVirtualAccount(customerId)
+  .then((response) => {
+    console.log('Dedicated Virtual Account Creation Response:', response);
+  })
+  .catch((error) => {
+    console.error('Dedicated Virtual Account Creation Error:', error);
+  });
+```
 
-- `currency` (string): The currency of the payout.
-- `amount` (number): The amount of the payout.
+Replace `'CUSTOMER_ID'` with the ID of the customer.
 
-### `getWalletBalance(currency)`
+#### Get Settlements
 
-Gets the balance of a wallet.
+To retrieve a list of settlements, use the `getSettlement` method:
 
-- `currency` (string): The currency of the wallet.
+```javascript
+sdk.getSettlement()
+  .then((response) => {
+    console.log('Settlements:', response);
+  })
+  .catch((error) => {
+    console.error('Settlements Error:', error);
+  });
+```
 
-### `getWalletTransactions(currency)`
+#### Refund Payment
 
-Gets the transactions of a wallet.
+To initiate a refund for a payment, use the `refund` method:
 
-- `currency` (string): The currency of the wallet.
+```javascript
+const reference = 'PAYMENT_REFERENCE';
 
-### `initiateAirtimePurchase()`
+sdk.refund(reference)
+  .then((response) => {
+    console.log('Refund Response:', response);
+  })
+  .catch((error) => {
+    console.error('Refund Error:', error);
+  });
+```
 
-Initiates an airtime purchase.
+Replace `'PAYMENT_REFERENCE'` with the reference of the payment to be refunded.
 
-### `initiateInternetSubscription()`
+---
 
-Initiates an internet subscription.
+This documentation covers the basic usage of the BudPay SDK. For more information, refer to the official BudPay SDK documentation or the SDK's source code.
 
-### `initiateTvSubscription()`
+```
 
-Initiates a TV subscription.
-
-### `initiateElectricityBillPayment()`
-
-Initiates an electricity bill payment.
-
-### `verifyBVN(bvn, firstName, middleName, lastName, phoneNumber, dob, gender, reference, callbackUrl)`
-
-Verifies a BVN (Bank Verification Number).
-
-- `bvn` (string): The BVN to verify.
-- `firstName` (string): The first name of the BVN owner.
-- `middleName` (string): The middle name of the BVN owner.
-- `lastName` (string): The last name of the BVN owner.
-- `phoneNumber` (string): The phone number of the BVN owner.
-- `dob` (string): The date of birth of the BVN owner (format: YYYY-MM-DD).
-- `gender` (string): The gender of the BVN owner.
-- `reference` (string): The reference for the BVN verification.
-- `callbackUrl` (string): The URL to receive the callback after the BVN verification.
