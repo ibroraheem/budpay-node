@@ -7,7 +7,7 @@
 To install the BudPay SDK, run the following command:
 
 ```bash
-npm install @budpay/sdk
+npm install @budpay-node
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm install @budpay/sdk
 First, require the BudPay SDK and create an instance of the SDK by providing your secret key and public key:
 
 ```javascript
-const BudPaySDK = require('path/to/budpay-sdk');
+const BudPaySDK = require('budpay-node');
 
 const sdk = new BudPaySDK('YOUR_SECRET_KEY', 'YOUR_PUBLIC_KEY');
 ```
@@ -27,7 +27,7 @@ Make sure to replace `'YOUR_SECRET_KEY'` and `'YOUR_PUBLIC_KEY'` with your actua
 The BudPay SDK initializes with your API credentials:
 
 ```javascript
-const BudPaySDK = require('path/to/budpay-sdk');
+const BudPaySDK = require('budpay-sdk');
 
 const sdk = new BudPaySDK('YOUR_SECRET_KEY', 'YOUR_PUBLIC_KEY');
 ```
