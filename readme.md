@@ -1,7 +1,10 @@
 
-# BudPaySDK
+# BudPaySDK for Node.js
 
-[![npm version](https://img.shields.io/npm/v/budpaysdk.svg)](https://www.npmjs.com/package/budpay-node)
+[![Build Status](https://travis-ci.com/ibroraheem/budpay-node.svg?branch=master)](https://travis-ci.com/ibroraheem/budpay-node)
+[![Coverage Status](https://coveralls.io/repos/github/ibroraheem/budpay-node/badge.svg?branch=master)](https://coveralls.io/github/ibroraheem/budpay-node?branch=master)
+
+[![npm version](https://img.shields.io/npm/v/budpay-node.svg)](https://www.npmjs.com/package/budpay-node)
 
 BudPaySDK is a Node.js library that provides a convenient way to interact with the BudPay API. BudPay is a payment gateway that allows you to handle various payment operations such as initializing transactions, verifying transactions, creating payment links, requesting payments, and more.
 

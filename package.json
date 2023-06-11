@@ -1,6 +1,6 @@
 {
   "name": "budpay-node",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A nodejs SDK for Budpay",
   "main": "index.js",
   "scripts": {
